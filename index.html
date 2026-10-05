@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wise Composite</title>
+<meta name="description" content="WISE COMPOSITE, ileri kompozit teknolojileriyle farklı sektörlerin ihtiyaçlarına yönelik yüksek performanslı parça ve komponentler üreten bir kompozit üretim firmasıdır.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* ============================================================
+   RENKLER VE YAZI TİPLERİ
+   Sarı "DOLDURULACAK" işaretleri (.todo) yalnızca taslak içindir.
+   Gerçek bilgiler girildikçe bu işaretler kaldırılacak.
+   ============================================================ */
+:root {
+  color-scheme: dark;
+  /* Koyu, göz yormayan palet: grafit zemin, katmanlı paneller, yumuşak metin */
+  --bg: #0F1216;
+  --surface: #161B22;
+  --ink: #E4E8EC;
+  --muted: #98A3AF;
+  --line: #262D37;
+  --accent: #5BA8DC;
+  --accent-hover: #7DBBE5;
+  --accent-ink: #07131C;
+  --accent-soft: #132433;
+  --deep: #0A0D11;
+  --deep-ink: #E4E8EC;
+  --deep-muted: #8B96A3;
+  --deep-line: #1E252E;
+  --weave-a: #1A2027;
+  --weave-b: #222A33;
+  --weave-ink: #AEB8C1;
+  --todo-bg: #3A2E0E;
+  --todo-line: #D9A23A;
+  --todo-ink: #F3D48A;
+
+  --f-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.625rem;
+  --step-3: clamp(1.9rem, 1.4rem + 2vw, 2.75rem);
+  --step-4: clamp(2.4rem, 1.5rem + 3.6vw, 4.25rem);
+
+  --gutter: clamp(16px, 4vw, 40px);
+  --radius: 4px;
+}
+
+/* ---------- Temel ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+h1, h2, h3 {
+  font-family: var(--f-display);
+  font-stretch: 112%;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 { font-size: var(--step-4); font-weight: 800; }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-1); line-height: 1.25; }
+p { margin: 0; }
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: var(--gutter); }
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.lead { font-size: var(--step-1); color: var(--muted); max-width: 60ch; line-height: 1.55; }
+.section { padding-block: clamp(64px, 9vw, 120px); }
+.section-head { display: grid; gap: 16px; max-width: 720px; margin-bottom: clamp(36px, 5vw, 56px); }
+.section-head p { color: var(--muted); max-width: 62ch; }
+
+/* ---------- DOLDURULACAK işareti ---------- */
+.todo {
+  display: inline-block;
+  font-family: var(--f-mono);
+  font-size: 0.8em;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.35;
+  padding: 0.1em 0.5em;
+  background: var(--todo-bg);
+  color: var(--todo-ink);
+  border: 1px dashed var(--todo-line);
+  border-radius: 3px;
+  vertical-align: 0.08em;
+  text-transform: none;
+  font-stretch: 100%;
+}
+.todo::before { content: "✎ "; }
+
+.draft-bar {
+  background: var(--todo-bg);
+  color: var(--todo-ink);
+  border-bottom: 1px dashed var(--todo-line);
+  font-family: var(--f-mono);
+  font-size: var(--step--1);
+  padding-block: 8px;
+}
+
+/* ---------- Butonlar ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--f-body); font-weight: 600; font-size: var(--step-0);
+  padding: 14px 24px; border-radius: var(--radius);
+  text-decoration: none; border: 1.5px solid transparent;
+  cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+}
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-ghost { border-color: var(--line); color: var(--ink); background: transparent; }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn .arrow { transition: transform .15s; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* ---------- Üst menü ---------- */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 72px; }
+.brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.brand svg { width: 34px; height: 34px; flex: none; }
+.brand-text { display: grid; line-height: 1; }
+.brand-name { font-family: var(--f-display); font-stretch: 125%; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.04em; }
+.brand-sub { font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.32em; color: var(--muted); margin-top: 4px; }
+.nav-links { display: flex; align-items: center; gap: 28px; list-style: none; margin: 0; padding: 0; }
+.nav-links a { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 0.97rem; }
+.nav-links a:hover { color: var(--accent); }
+.nav-links .btn { padding: 10px 18px; font-size: 0.95rem; color: var(--accent-ink); }
+.nav-toggle {
+  display: none; background: none; border: 1.5px solid var(--line); border-radius: var(--radius);
+  color: var(--ink); font: 600 0.95rem var(--f-body); padding: 8px 14px; cursor: pointer;
+}
+@media (max-width: 920px) {
+  .nav-toggle { display: inline-block; }
+  .nav-links {
+    display: none; position: absolute; left: 0; right: 0; top: 100%;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+    padding: 8px var(--gutter) 20px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li a:not(.btn) { display: block; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .nav-links .btn { margin-top: 16px; justify-content: center; }
+}
+
+/* ---------- Fotoğraf alanları (kompozit dokuma deseni) ---------- */
+.photo {
+  position: relative;
+  background-color: var(--weave-a);
+  background-image:
+    repeating-linear-gradient(45deg, var(--weave-b) 0 7px, transparent 7px 14px),
+    repeating-linear-gradient(-45deg, color-mix(in srgb, var(--weave-b) 55%, transparent) 0 7px, transparent 7px 14px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex; align-items: flex-end;
+  max-width: 100%;
+}
+.photo-cap {
+  margin: 14px; padding: 8px 12px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--weave-ink);
+  font-family: var(--f-mono); font-size: 0.78rem; line-height: 1.45;
+  border-radius: 3px; max-width: calc(100% - 28px);
+}
+.photo-cap b { color: var(--todo-ink); background: var(--todo-bg); font-weight: 500; padding: 0 4px; border-radius: 2px; }
+
+/* ---------- Giriş (hero) ---------- */
+.hero { padding-block: clamp(48px, 7vw, 96px) clamp(56px, 7vw, 96px); }
+.hero-grid { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.hero-copy { display: grid; gap: 24px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+.hero-sectors { list-style: none; margin: 16px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+.hero-sectors li + li { border-left: 1px solid var(--line); }
+.hero-sectors a { display: grid; gap: 6px; padding: 20px 16px 4px; height: 100%; text-decoration: none; color: var(--ink); }
+.hero-sectors li:first-child a { padding-left: 0; }
+.hs-name { font-family: var(--f-display); font-stretch: 118%; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.06em; transition: color .15s; }
+.hs-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.4; }
+.hero-sectors a:hover .hs-name { color: var(--accent); }
+@media (max-width: 560px) {
+  .hero-sectors { grid-template-columns: 1fr; }
+  .hero-sectors li + li { border-left: 0; border-top: 1px solid var(--line); }
+  .hero-sectors a, .hero-sectors li:first-child a { padding: 14px 0; }
+}
+.hero-visual { position: relative; }
+.hero-visual .photo { aspect-ratio: 4 / 5; }
+.spec-card {
+  position: absolute; left: -28px; bottom: 36px;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: 0 22px 48px -20px rgba(0, 0, 0, 0.7);
+  padding: 18px 20px; width: min(300px, 80%);
+  font-family: var(--f-mono); font-size: 0.8rem;
+}
+.spec-card .spec-title { font-family: var(--f-body); font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; }
+.spec-card dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; }
+.spec-card dt { color: var(--muted); }
+.spec-card dd { margin: 0; }
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-visual .photo { aspect-ratio: 4 / 3; }
+  .spec-card { position: static; width: auto; margin-top: -40px; margin-inline: 16px; }
+}
+
+/* ---------- Rakamlar ---------- */
+.figures { background: var(--deep); color: var(--deep-ink); }
+.figures-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.figure { padding: 40px 28px; border-left: 1px solid var(--deep-line); display: grid; gap: 6px; }
+.figure:first-child { border-left: 0; padding-left: 0; }
+.figure-num { font-family: var(--f-display); font-stretch: 118%; font-weight: 700; font-size: var(--step-3); line-height: 1; font-variant-numeric: tabular-nums; }
+.figure-num .todo { font-size: 0.42em; vertical-align: middle; }
+.figure-label { color: var(--deep-muted); font-size: 0.95rem; }
+@media (max-width: 860px) {
+  .figures-grid { grid-template-columns: repeat(2, 1fr); }
+  .figure { padding: 28px 20px; }
+  .figure:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .figure:nth-child(n+3) { border-top: 1px solid var(--deep-line); }
+}
+
+/* ---------- Hakkımızda ---------- */
+.about-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
+.about-photo { aspect-ratio: 5 / 6; }
+.about-copy { display: grid; gap: 22px; }
+.about-copy p { max-width: 62ch; }
+.quote {
+  margin: 12px 0 0; padding: 28px 0 0; border-top: 1px solid var(--line);
+  display: grid; gap: 18px;
+}
+.quote blockquote {
+  margin: 0; font-family: var(--f-display); font-stretch: 100%; font-weight: 500;
+  font-size: var(--step-2); line-height: 1.3; letter-spacing: -0.005em; text-wrap: balance;
+}
+.quote figcaption { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 0.95rem; }
+.avatar { width: 52px; height: 52px; border-radius: 50%; flex: none; }
+.quote figcaption strong { color: var(--ink); display: block; font-weight: 600; }
+@media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; } .about-photo { aspect-ratio: 4 / 3; } }
+
+/* ---------- Sektörler ---------- */
+.sectors { background: var(--surface); border-block: 1px solid var(--line); }
+.sector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.sector { display: grid; grid-template-rows: auto 1fr; gap: 18px; }
+.sector .photo { aspect-ratio: 4 / 3; }
+.sector-head { display: grid; gap: 8px; }
+.sector-head p { color: var(--muted); font-size: 0.98rem; }
+.sector-head .sector-sub { color: var(--ink); font-weight: 600; font-size: 1rem; }
+@media (max-width: 960px) { .sector-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .sector-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Üretim süreci ---------- */
+.process-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); }
+.process-list li { padding: 28px 28px 32px 0; border-bottom: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
+.process-list li:not(:nth-child(3n+1)) { padding-left: 28px; border-left: 1px solid var(--line); }
+.step-no { font-family: var(--f-mono); font-size: 0.85rem; color: var(--accent); font-weight: 500; }
+.process-list p { color: var(--muted); font-size: 0.98rem; }
+.process-list.areas { grid-template-columns: repeat(2, 1fr); }
+.process-list.areas li { padding-left: 0; border-left: 0; }
+.process-list.areas li:nth-child(2n) { padding-left: 28px; border-left: 1px solid var(--line); }
+.flow-line {
+  margin-top: 40px; padding: 18px 24px; border-radius: var(--radius);
+  background: var(--accent-soft); color: var(--ink);
+  font-family: var(--f-display); font-stretch: 112%; font-weight: 600;
+  font-size: var(--step-1); line-height: 1.4; text-align: center; text-wrap: balance;
+}
+@media (max-width: 860px) {
+  .process-list { grid-template-columns: 1fr; }
+  .process-list li, .process-list li:not(:nth-child(3n+1)), .process-list.areas li:nth-child(2n) { padding: 24px 0; border-left: 0; }
+}
+
+
+/* ---------- Kalite ---------- */
+.quality { background: var(--deep); color: var(--deep-ink); }
+.quality .eyebrow { color: var(--accent-hover); }
+.quality .section-head p { color: var(--deep-muted); }
+.cert-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.cert {
+  border: 1px solid var(--deep-line); border-radius: var(--radius); padding: 24px;
+  display: grid; gap: 12px; align-content: start;
+}
+.cert-code { font-family: var(--f-display); font-stretch: 115%; font-weight: 700; font-size: 1.4rem; }
+.cert p { color: var(--deep-muted); font-size: 0.95rem; }
+.cert .todo { justify-self: start; }
+.quality-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 56px; }
+.quality-row .photo { aspect-ratio: 16 / 9; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; align-content: center; }
+.checks li { display: grid; grid-template-columns: 24px 1fr; gap: 14px; }
+.checks svg { width: 22px; height: 22px; color: var(--accent-hover); margin-top: 2px; }
+.checks strong { display: block; font-weight: 600; }
+.checks span { color: var(--deep-muted); font-size: 0.95rem; }
+@media (max-width: 960px) { .cert-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) { .quality-row { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .cert-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Ekip ---------- */
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.member { display: grid; gap: 14px; }
+.member .photo { aspect-ratio: 1 / 1; }
+.member-role { color: var(--muted); font-size: 0.95rem; }
+@media (max-width: 860px) { .team-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .team-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Referanslar ---------- */
+.refs { background: var(--surface); border-block: 1px solid var(--line); }
+.logo-grid { display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.logo-slot {
+  aspect-ratio: 3 / 2; display: grid; place-items: center; text-align: center; padding: 12px;
+  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: 0.78rem; color: var(--muted);
+}
+@media (max-width: 860px) { .logo-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 480px) { .logo-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- İletişim ---------- */
+.contact-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+.contact-info { display: grid; gap: 28px; }
+.contact-info dl { display: grid; gap: 20px; margin: 0; }
+.contact-info dt { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.contact-info dd { margin: 0; font-size: 1.05rem; }
+.form {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: clamp(22px, 4vw, 40px); display: grid; gap: 18px;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 500; font-size: 0.95rem; }
+.field input, .field select, .field textarea {
+  font: inherit; font-size: 1rem; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; width: 100%;
+}
+.field input[type="file"] { padding: 10px; font-size: 0.92rem; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.field textarea { min-height: 130px; resize: vertical; }
+.hint { color: var(--muted); font-size: 0.85rem; }
+.consent { display: flex; gap: 10px; align-items: flex-start; font-size: 0.92rem; color: var(--muted); }
+.consent input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.form-status { font-size: 0.95rem; padding: 12px 14px; border-radius: var(--radius); background: var(--accent-soft); }
+@media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+
+/* ---------- Alt bilgi ---------- */
+.site-footer { background: var(--deep); color: var(--deep-muted); padding-block: 56px 32px; font-size: 0.95rem; }
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
+.site-footer .brand { color: var(--deep-ink); }
+.site-footer .brand-sub { color: var(--deep-muted); }
+.site-footer h4 { font-family: var(--f-mono); font-weight: 500; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--deep-ink); margin: 0 0 14px; }
+.site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.site-footer a { color: var(--deep-muted); text-decoration: none; }
+.site-footer a:hover { color: var(--deep-ink); }
+.footer-about { display: grid; gap: 16px; max-width: 40ch; }
+.footer-bottom { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--deep-line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 0.85rem; }
+@media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-about { grid-column: 1 / -1; } }
+</style>
+</head>
+<body>
+
+<!-- TASLAK UYARISI: Site yayına alınmadan önce bu satırı silin. -->
+<div class="draft-bar">
+  <div class="wrap">Taslak sürüm · <span class="todo">Sarı işaretli</span> alanlar gerçek bilgilerle doldurulacak.</div>
+</div>
+
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Ana menü">
+    <!-- GEÇİCİ LOGO: Kurumsal logo hazır olduğunda bu SVG ile değiştirilecek. -->
+    <a class="brand" href="#top" aria-label="Wise Composite ana sayfa">
+      <svg viewBox="0 0 34 34" aria-hidden="true">
+        <path d="M4 24 L14 8 H30 L20 24 Z" fill="currentColor" opacity="0.22"/>
+        <path d="M4 27 L14 11 H30 L20 27 Z" fill="currentColor" opacity="0.5"/>
+        <path d="M4 30 L14 14 H30 L20 30 Z" fill="var(--accent)"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">WISE</span>
+        <span class="brand-sub">COMPOSITE</span>
+      </span>
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menü</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#hakkimizda">Hakkımızda</a></li>
+      <li><a href="#sektorler">Sektörler</a></li>
+      <li><a href="#uretim">Üretim</a></li>
+      <li><a href="#kalite">Kalite</a></li>
+      <li><a href="#referanslar">Referanslar</a></li>
+      <li><a class="btn btn-primary" href="#iletisim">Teklif İsteyin</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ GİRİŞ ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1>Kompozitte Mühendislik, <em>Üretimde Güç.</em></h1>
+        <p class="lead">Mühendislikten Üretime, Kompozitte Entegre Çözümler</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#iletisim">Teklif İsteyin <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="#uretim">Faaliyet Alanlarımız</a>
+        </div>
+        <ul class="hero-sectors" aria-label="Sektörler">
+          <li><a href="#sektorler"><span class="hs-name">KARA ARAÇLARI</span><span class="hs-sub">Ağır Vasıta &amp; Ticari Araçlar</span></a></li>
+          <li><a href="#sektorler"><span class="hs-name">RAYLI SİSTEMLER</span><span class="hs-sub">Tramvay • Metro • Tren</span></a></li>
+          <li><a href="#sektorler"><span class="hs-name">ÖZEL PROJELER</span><span class="hs-sub">Proje Bazlı Kompozit Üretim</span></a></li>
+        </ul>
+      </div>
+
+      <div class="hero-visual">
+        <div class="photo" role="img" aria-label="Fotoğraf alanı: pres başında çalışan operatör">
+          <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b><br>Pres başında çalışan bir operatör, arkada üretim holü. Gerçek çalışanlar, doğal ışık.</p>
+        </div>
+        <div class="spec-card" aria-label="Örnek proje kartı">
+          <div class="spec-title">Örnek proje <span class="todo">Doldurulacak</span></div>
+          <dl>
+            <dt>Sektör</dt><dd>Kara Araçları</dd>
+            <dt>Parça</dt><dd><span class="todo">Parça adı</span></dd>
+            <dt>Malzeme</dt><dd><span class="todo">SMC / BMC</span></dd>
+            <dt>Üretim</dt><dd>Presli Seri Üretim</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RAKAMLAR ============ -->
+  <section class="figures" aria-label="Rakamlarla Wise Composite">
+    <div class="wrap figures-grid">
+      <div class="figure">
+        <div class="figure-num"><span class="todo">Yıl</span></div>
+        <div class="figure-label">Kuruluş yılı</div>
+      </div>
+      <div class="figure">
+        <div class="figure-num"><span class="todo">m²</span></div>
+        <div class="figure-label">Kapalı üretim alanı</div>
+      </div>
+      <div class="figure">
+        <div class="figure-num"><span class="todo">Sayı</span></div>
+        <div class="figure-label">Çalışan</div>
+      </div>
+      <div class="figure">
+        <div class="figure-num"><span class="todo">Sayı</span></div>
+        <div class="figure-label">Tamamlanan proje</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HAKKIMIZDA ============ -->
+  <section class="section" id="hakkimizda">
+    <div class="wrap about-grid">
+      <div class="photo about-photo" role="img" aria-label="Fotoğraf alanı: kurucu veya ekip">
+        <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b><br>Kurucumuz ya da ekibin tamamı, tesisin önünde veya üretim holünde.</p>
+      </div>
+      <div class="about-copy">
+        <p class="eyebrow">Hakkımızda</p>
+        <h2>Deneyimimiz ve Yetkinliklerimiz</h2>
+        <p>WISE COMPOSITE, ileri kompozit teknolojileriyle farklı sektörlerin ihtiyaçlarına yönelik yüksek performanslı parça ve komponentler üreten bir kompozit üretim firmasıdır.</p>
+        <p>Ağır vasıta sektörüne yönelik kompozit yedek parça, raylı sistem araçlarına yönelik kompozit parça ve komponentler ile müşterilerimizin teknik gereksinimlerine özel proje bazlı kompozit ürünler geliştiriyor ve üretiyoruz.</p>
+        <p>BMC ve SMC kompozit malzemelerin kendi bünyemizde formülasyon ve üretiminden; presli seri üretim, boya, yüzey işlemleri, kalite kontrol ve sevkiyata kadar tüm süreçleri entegre üretim yapımız içerisinde yönetiyoruz.</p>
+        <p>Standart ürünlerin yanı sıra, müşteriye özel ölçü, geometri, malzeme ve performans gereksinimlerine uygun kompozit çözümler geliştirerek projeye özel üretim kabiliyeti sunuyoruz.</p>
+
+        <figure class="quote">
+          <blockquote>“<span class="todo">Kurucunun müşterilere söylemek istediği kısa bir söz</span>”</blockquote>
+          <figcaption>
+            <div class="photo avatar" role="img" aria-label="Kurucu fotoğrafı alanı"></div>
+            <div><strong><span class="todo">Ad Soyad</span></strong>Kurucu ve Genel Müdür</div>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEKTÖRLER ============ -->
+  <section class="section sectors" id="sektorler">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Sektörler</p>
+        <h2>Sektörel Çözümler</h2>
+      </div>
+
+      <div class="sector-grid">
+        <article class="sector">
+          <div class="photo" role="img" aria-label="Fotoğraf alanı: kara aracı parçası">
+            <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b><br>Üretilmiş bir kamyon, çekici veya otobüs parçası ya da parçanın takıldığı araç.</p>
+          </div>
+          <div class="sector-head">
+            <span class="step-no">01</span>
+            <h3>Kara Araçları</h3>
+            <p class="sector-sub">Ağır Vasıta ve Ticari Araç Komponentleri</p>
+            <p>Ağır ticari araçlar, kamyon, çekici, otobüs ve diğer kara araçları için kompozit yedek parça ve komponentlerin üretimi.</p>
+          </div>
+        </article>
+
+        <article class="sector">
+          <div class="photo" role="img" aria-label="Fotoğraf alanı: raylı sistem parçası">
+            <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b><br>Üretilmiş bir tramvay, metro veya tren parçası ya da parçanın takıldığı araç.</p>
+          </div>
+          <div class="sector-head">
+            <span class="step-no">02</span>
+            <h3>Raylı Sistemler</h3>
+            <p class="sector-sub">Tramvay • Metro • Tren</p>
+            <p>Tramvay, metro ve trenlerde kullanılan kompozit dış ve iç gövde parçaları, kapaklar, paneller ve projeye özel komponentlerin üretimi.</p>
+          </div>
+        </article>
+
+        <article class="sector">
+          <div class="photo" role="img" aria-label="Fotoğraf alanı: projeye özel parça">
+            <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b><br>Müşteriye özel üretilmiş bir parça, teknik resmiyle yan yana.</p>
+          </div>
+          <div class="sector-head">
+            <span class="step-no">03</span>
+            <h3>Proje Bazlı Özel Üretim</h3>
+            <p class="sector-sub">Müşteriye Özel Kompozit Çözümler</p>
+            <p>Farklı sektörlerin ihtiyaçlarına yönelik; teknik resim, numune veya proje gereksinimlerine göre özel kompozit parça geliştirme ve üretimi.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ÜRETİM ============ -->
+  <section class="section" id="uretim">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Faaliyet Alanlarımız</p>
+        <h2>Tek Çatı Altında Kompozit Üretim</h2>
+        <p>Malzeme üretiminden nihai ürüne kadar uzanan entegre üretim altyapımızla; seri üretimden proje bazlı özel çözümlere kadar geniş bir yelpazede kompozit üretim hizmeti sunuyoruz.</p>
+      </div>
+
+      <ul class="process-list areas">
+        <li>
+          <h3>Ağır Vasıta Kompozit Parçaları</h3>
+          <p>Ağır ticari araçlara yönelik kompozit yedek parça ve komponentlerin seri üretimi.</p>
+        </li>
+        <li>
+          <h3>Raylı Sistem Kompozit Parçaları</h3>
+          <p>Raylı sistem araçlarında kullanılan, proje ve teknik şartnamelere uygun kompozit parça ve komponentlerin üretimi.</p>
+        </li>
+        <li>
+          <h3>Proje Bazlı Kompozit Üretim</h3>
+          <p>Farklı sektörlerde ihtiyaç duyulan özel parçaların; teknik gereksinimler, kullanım koşulları ve üretim adetlerine göre geliştirilmesi ve üretilmesi.</p>
+        </li>
+        <li>
+          <h3>BMC &amp; SMC Üretimi</h3>
+          <p>Reçine, cam elyaf, mineral dolgu ve proses katkılarının ürün gereksinimlerine uygun formülasyonlarla kendi bünyemizde hazırlanması ve kompozit ham madde üretiminin gerçekleştirilmesi.</p>
+        </li>
+      </ul>
+
+      <p class="flow-line">Presli Seri Üretim • Boya &amp; Yüzey İşlemleri • Kalite Kontrol • Sevkiyat</p>
+    </div>
+  </section>
+
+  <!-- ============ KALİTE ============ -->
+  <section class="section quality" id="kalite">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Kalite ve belgeler</p>
+        <h2>Söylediğimizi belgeleriz</h2>
+        <p>Raylı sistemlerde yolcu güvenliği, kara araçlarında tekrarlanabilir kalite beklenir. Belgelerimizi talep eden her müşteriyle paylaşırız.</p>
+      </div>
+
+      <!-- Sahip olunmayan belgeleri silin, olanların numarasını girin. -->
+      <div class="cert-grid">
+        <div class="cert">
+          <div class="cert-code">ISO 9001</div>
+          <p>Kalite yönetim sistemi</p>
+          <span class="todo">Belge durumu</span>
+        </div>
+        <div class="cert">
+          <div class="cert-code">EN 45545-2</div>
+          <p>Raylı araçlarda yangın güvenliği, malzeme testleri</p>
+          <span class="todo">Belge durumu</span>
+        </div>
+        <div class="cert">
+          <div class="cert-code">IATF 16949</div>
+          <p>Otomotiv kalite yönetim sistemi</p>
+          <span class="todo">Belge durumu</span>
+        </div>
+        <div class="cert">
+          <div class="cert-code">ISO 14001</div>
+          <p>Çevre yönetim sistemi</p>
+          <span class="todo">Belge durumu</span>
+        </div>
+      </div>
+
+      <div class="quality-row">
+        <div class="photo" role="img" aria-label="Fotoğraf alanı: kalite kontrol">
+          <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b><br>Kalite kontrol sorumlusu bir parçayı ölçerken.</p>
+        </div>
+        <ul class="checks">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+            <div><strong>Giriş kontrolü</strong><span>Reçine ve elyaf partileri üretime girmeden kontrol edilir.</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+            <div><strong>İzlenebilirlik</strong><span>Her parçanın malzeme partisi ve üretim tarihi kayıt altındadır.</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+            <div><strong>Son kontrol</strong><span>Ölçü, yüzey ve renk kontrolü yapılmadan hiçbir parça sevk edilmez.</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EKİP ============ -->
+  <section class="section" id="ekip">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Ekibimiz</p>
+        <h2>Parçalarınızı üreten insanlar</h2>
+        <p>Siparişinizle ilgilenen kişileri tanıyın. Sorularınız doğrudan üretimi bilen birine ulaşır.</p>
+      </div>
+      <div class="team-grid">
+        <div class="member">
+          <div class="photo" role="img" aria-label="Fotoğraf alanı: üretim sorumlusu">
+            <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b></p>
+          </div>
+          <h3><span class="todo">Ad Soyad</span></h3>
+          <p class="member-role">Üretim sorumlusu</p>
+        </div>
+        <div class="member">
+          <div class="photo" role="img" aria-label="Fotoğraf alanı: proje mühendisi">
+            <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b></p>
+          </div>
+          <h3><span class="todo">Ad Soyad</span></h3>
+          <p class="member-role">Proje mühendisi</p>
+        </div>
+        <div class="member">
+          <div class="photo" role="img" aria-label="Fotoğraf alanı: kalite sorumlusu">
+            <p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b></p>
+          </div>
+          <h3><span class="todo">Ad Soyad</span></h3>
+          <p class="member-role">Kalite sorumlusu</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REFERANSLAR ============ -->
+  <section class="section refs" id="referanslar">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Referanslar</p>
+        <h2>Birlikte çalıştığımız firmalar</h2>
+        <p><span class="todo">Adı paylaşılabilecek müşteriler ve projeler</span></p>
+      </div>
+      <div class="logo-grid">
+        <div class="logo-slot">Müşteri logosu</div>
+        <div class="logo-slot">Müşteri logosu</div>
+        <div class="logo-slot">Müşteri logosu</div>
+        <div class="logo-slot">Müşteri logosu</div>
+        <div class="logo-slot">Müşteri logosu</div>
+        <div class="logo-slot">Müşteri logosu</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ İLETİŞİM ============ -->
+  <section class="section" id="iletisim">
+    <div class="wrap contact-grid">
+      <div class="contact-info">
+        <div class="section-head" style="margin-bottom:0">
+          <p class="eyebrow">İletişim</p>
+          <h2>Parçanızı konuşalım</h2>
+          <p>Çizim, fotoğraf veya kısa bir açıklama göndermeniz yeterli. Mesajınıza <span class="todo">yanıt süresi, örn. 1 iş günü</span> içinde dönüş yapıyoruz.</p>
+        </div>
+        <dl>
+          <div><dt>Adres</dt><dd><span class="todo">Açık adres</span></dd></div>
+          <div><dt>Telefon</dt><dd><span class="todo">+90 ___ ___ __ __</span></dd></div>
+          <div><dt>E-posta</dt><dd><span class="todo">info@alanadi.com.tr</span></dd></div>
+          <div><dt>Çalışma saatleri</dt><dd><span class="todo">Hafta içi 08:00–18:00</span></dd></div>
+        </dl>
+      </div>
+
+      <form class="form" id="quote-form" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="f-name">Ad Soyad</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-company">Firma</label>
+            <input id="f-company" name="company" type="text" autocomplete="organization">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="f-email">E-posta</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="f-phone">Telefon</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-sector">Sektör</label>
+          <select id="f-sector" name="sector">
+            <option>Kara Araçları</option>
+            <option>Raylı Sistemler</option>
+            <option>Özel Projeler</option>
+            <option>BMC &amp; SMC</option>
+            <option>Diğer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-message">Parça veya proje açıklaması</label>
+          <textarea id="f-message" name="message" placeholder="Parçanın adı, yaklaşık ölçüsü, yıllık adet, varsa standart gereksinimi…" required></textarea>
+        </div>
+        <div class="field">
+          <label for="f-file">Teknik çizim veya fotoğraf</label>
+          <input id="f-file" name="file" type="file" accept=".pdf,.dwg,.dxf,.step,.stp,.igs,.jpg,.jpeg,.png">
+          <span class="hint">PDF, DWG, STEP veya fotoğraf yükleyebilirsiniz.</span>
+        </div>
+        <label class="consent" for="f-kvkk">
+          <input id="f-kvkk" name="kvkk" type="checkbox" required>
+          <span><a href="#kvkk">KVKK Aydınlatma Metni</a>'ni okudum, kişisel verilerimin teklif hazırlanması amacıyla işlenmesini kabul ediyorum.</span>
+        </label>
+        <div><button class="btn btn-primary" type="submit">Teklif talebini gönder <span class="arrow" aria-hidden="true">→</span></button></div>
+        <p class="form-status" id="form-status" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a class="brand" href="#top" aria-label="Wise Composite ana sayfa">
+          <svg viewBox="0 0 34 34" aria-hidden="true">
+            <path d="M4 24 L14 8 H30 L20 24 Z" fill="currentColor" opacity="0.22"/>
+            <path d="M4 27 L14 11 H30 L20 27 Z" fill="currentColor" opacity="0.5"/>
+            <path d="M4 30 L14 14 H30 L20 30 Z" fill="var(--accent)"/>
+          </svg>
+          <span class="brand-text">
+            <span class="brand-name">WISE</span>
+            <span class="brand-sub">COMPOSITE</span>
+          </span>
+        </a>
+        <p>Mühendislikten Üretime, Kompozitte Entegre Çözümler</p>
+        <p><span class="todo">Geçici logo, kurumsal logo eklenecek</span></p>
+      </div>
+      <div>
+        <h4>Kurumsal</h4>
+        <ul>
+          <li><a href="#hakkimizda">Hakkımızda</a></li>
+          <li><a href="#kalite">Kalite ve belgeler</a></li>
+          <li><a href="#ekip">Ekibimiz</a></li>
+          <li><a href="#kvkk" id="kvkk">KVKK Aydınlatma Metni</a> <span class="todo">Metin eklenecek</span></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hizmetler</h4>
+        <ul>
+          <li><a href="#sektorler">Kara Araçları</a></li>
+          <li><a href="#sektorler">Raylı Sistemler</a></li>
+          <li><a href="#sektorler">Özel Projeler</a></li>
+          <li><a href="#uretim">BMC &amp; SMC Üretimi</a></li>
+          <li><a href="#iletisim">Teklif isteyin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> Wise Composite. Tüm hakları saklıdır.</span>
+      <span><span class="todo">Ticaret unvanı ve MERSİS no</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobil menü
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.textContent = open ? 'Kapat' : 'Menü';
+  });
+  links.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = 'Menü';
+    }
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Teklif formu
+  // TODO: Form henüz bir e-posta adresine veya sunucuya bağlı değil.
+  const form = document.getElementById('quote-form');
+  const status = document.getElementById('form-status');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      status.textContent = 'Lütfen ad soyad, e-posta ve açıklama alanlarını doldurun ve KVKK onay kutusunu işaretleyin.';
+      status.hidden = false;
+      form.reportValidity();
+      return;
+    }
+    status.textContent = 'Teşekkürler, talebiniz alındı. (Taslak: form henüz bir e-posta adresine bağlı değil.)';
+    status.hidden = false;
+    form.reset();
+  });
+</script>
+</body>
+</html>
