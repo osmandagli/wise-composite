@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wise Composite</title>
 <meta name="description" content="WISE COMPOSITE, ileri kompozit teknolojileriyle farklı sektörlerin ihtiyaçlarına yönelik yüksek performanslı parça ve komponentler üreten bir kompozit üretim firmasıdır.">
+<meta name="theme-color" content="#0F1216">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="Wise Composite">
+<meta property="og:title" content="Wise Composite | Kompozitte Mühendislik, Üretimde Güç.">
+<meta property="og:description" content="Mühendislikten Üretime, Kompozitte Entegre Çözümler">
+<meta property="og:url" content="https://wisecomposite.duckdns.org/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect width='34' height='34' rx='6' fill='%230F1216'/%3E%3Cpath d='M4 24 L14 8 H30 L20 24 Z' fill='%23E4E8EC' opacity='.22'/%3E%3Cpath d='M4 27 L14 11 H30 L20 27 Z' fill='%23E4E8EC' opacity='.5'/%3E%3Cpath d='M4 30 L14 14 H30 L20 30 Z' fill='%235BA8DC'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -46,7 +54,7 @@
   --step-1: 1.25rem;
   --step-2: 1.625rem;
   --step-3: clamp(1.9rem, 1.4rem + 2vw, 2.75rem);
-  --step-4: clamp(2.4rem, 1.5rem + 3.6vw, 4.25rem);
+  --step-4: clamp(2.1rem, 1.4rem + 3.8vw, 4.25rem);
 
   --gutter: clamp(16px, 4vw, 40px);
   --radius: 4px;
@@ -54,8 +62,11 @@
 
 /* ---------- Temel ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
 body {
   margin: 0;
   background: var(--bg);
@@ -76,6 +87,7 @@ h1, h2, h3 {
   letter-spacing: -0.01em;
   margin: 0;
   text-wrap: balance;
+  overflow-wrap: break-word;
 }
 h1 { font-size: var(--step-4); font-weight: 800; }
 h2 { font-size: var(--step-3); }
@@ -94,6 +106,12 @@ p { margin: 0; }
 .section { padding-block: clamp(64px, 9vw, 120px); }
 .section-head { display: grid; gap: 16px; max-width: 720px; margin-bottom: clamp(36px, 5vw, 56px); }
 .section-head p { color: var(--muted); max-width: 62ch; }
+.skip-link {
+  position: absolute; left: 16px; top: -100px; z-index: 50;
+  background: var(--accent); color: var(--accent-ink); font-weight: 600;
+  padding: 10px 16px; border-radius: var(--radius); text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
 
 /* ---------- DOLDURULACAK işareti ---------- */
 .todo {
@@ -159,7 +177,9 @@ p { margin: 0; }
 .nav-toggle {
   display: none; background: none; border: 1.5px solid var(--line); border-radius: var(--radius);
   color: var(--ink); font: 600 0.95rem var(--f-body); padding: 8px 14px; cursor: pointer;
+  transition: border-color .15s;
 }
+.nav-toggle:hover { border-color: var(--ink); }
 @media (max-width: 920px) {
   .nav-toggle { display: inline-block; }
   .nav-links {
@@ -213,7 +233,7 @@ p { margin: 0; }
   .hero-sectors a, .hero-sectors li:first-child a { padding: 14px 0; }
 }
 .hero-visual { position: relative; }
-.hero-visual .photo { aspect-ratio: 4 / 5; }
+.hero-visual .photo { aspect-ratio: 4 / 5; align-items: flex-start; }
 .spec-card {
   position: absolute; left: -28px; bottom: 36px;
   background: var(--surface); color: var(--ink);
@@ -229,7 +249,7 @@ p { margin: 0; }
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; }
   .hero-visual .photo { aspect-ratio: 4 / 3; }
-  .spec-card { position: static; width: auto; margin-top: -40px; margin-inline: 16px; }
+  .spec-card { position: relative; left: auto; bottom: auto; z-index: 1; width: auto; margin-top: -40px; margin-inline: 16px; }
 }
 
 /* ---------- Rakamlar ---------- */
@@ -292,7 +312,7 @@ p { margin: 0; }
   font-size: var(--step-1); line-height: 1.4; text-align: center; text-wrap: balance;
 }
 @media (max-width: 860px) {
-  .process-list { grid-template-columns: 1fr; }
+  .process-list, .process-list.areas { grid-template-columns: 1fr; }
   .process-list li, .process-list li:not(:nth-child(3n+1)), .process-list.areas li:nth-child(2n) { padding: 24px 0; border-left: 0; }
 }
 
@@ -357,6 +377,7 @@ p { margin: 0; }
   border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; width: 100%;
 }
 .field input[type="file"] { padding: 10px; font-size: 0.92rem; }
+.field [aria-invalid="true"] { border-color: var(--todo-line); }
 .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
 .field textarea { min-height: 130px; resize: vertical; }
 .hint { color: var(--muted); font-size: 0.85rem; }
@@ -371,7 +392,7 @@ p { margin: 0; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
 .site-footer .brand { color: var(--deep-ink); }
 .site-footer .brand-sub { color: var(--deep-muted); }
-.site-footer h4 { font-family: var(--f-mono); font-weight: 500; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--deep-ink); margin: 0 0 14px; }
+.site-footer h2 { font-family: var(--f-mono); font-stretch: 100%; font-weight: 500; font-size: 0.78rem; line-height: 1.4; letter-spacing: 0.08em; text-transform: uppercase; color: var(--deep-ink); margin: 0 0 14px; }
 .site-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .site-footer a { color: var(--deep-muted); text-decoration: none; }
 .site-footer a:hover { color: var(--deep-ink); }
@@ -382,6 +403,8 @@ p { margin: 0; }
 </head>
 <body>
 
+<a class="skip-link" href="#icerik">İçeriğe geç</a>
+
 <!-- TASLAK UYARISI: Site yayına alınmadan önce bu satırı silin. -->
 <div class="draft-bar">
   <div class="wrap">Taslak sürüm · <span class="todo">Sarı işaretli</span> alanlar gerçek bilgilerle doldurulacak.</div>
@@ -390,7 +413,7 @@ p { margin: 0; }
 <header class="site-header">
   <nav class="wrap nav" aria-label="Ana menü">
     <!-- GEÇİCİ LOGO: Kurumsal logo hazır olduğunda bu SVG ile değiştirilecek. -->
-    <a class="brand" href="#top" aria-label="Wise Composite ana sayfa">
+    <a class="brand" href="#icerik" aria-label="Wise Composite ana sayfa" translate="no">
       <svg viewBox="0 0 34 34" aria-hidden="true">
         <path d="M4 24 L14 8 H30 L20 24 Z" fill="currentColor" opacity="0.22"/>
         <path d="M4 27 L14 11 H30 L20 27 Z" fill="currentColor" opacity="0.5"/>
@@ -405,7 +428,7 @@ p { margin: 0; }
     <ul class="nav-links" id="nav-links">
       <li><a href="#hakkimizda">Hakkımızda</a></li>
       <li><a href="#sektorler">Sektörler</a></li>
-      <li><a href="#uretim">Üretim</a></li>
+      <li><a href="#uretim">Faaliyet Alanları</a></li>
       <li><a href="#kalite">Kalite</a></li>
       <li><a href="#referanslar">Referanslar</a></li>
       <li><a class="btn btn-primary" href="#iletisim">Teklif İsteyin</a></li>
@@ -413,7 +436,7 @@ p { margin: 0; }
   </nav>
 </header>
 
-<main id="top">
+<main id="icerik">
 
   <!-- ============ GİRİŞ ============ -->
   <section class="hero">
@@ -480,7 +503,7 @@ p { margin: 0; }
       <div class="about-copy">
         <p class="eyebrow">Hakkımızda</p>
         <h2>Deneyimimiz ve Yetkinliklerimiz</h2>
-        <p>WISE COMPOSITE, ileri kompozit teknolojileriyle farklı sektörlerin ihtiyaçlarına yönelik yüksek performanslı parça ve komponentler üreten bir kompozit üretim firmasıdır.</p>
+        <p><span translate="no">WISE COMPOSITE</span>, ileri kompozit teknolojileriyle farklı sektörlerin ihtiyaçlarına yönelik yüksek performanslı parça ve komponentler üreten bir kompozit üretim firmasıdır.</p>
         <p>Ağır vasıta sektörüne yönelik kompozit yedek parça, raylı sistem araçlarına yönelik kompozit parça ve komponentler ile müşterilerimizin teknik gereksinimlerine özel proje bazlı kompozit ürünler geliştiriyor ve üretiyoruz.</p>
         <p>BMC ve SMC kompozit malzemelerin kendi bünyemizde formülasyon ve üretiminden; presli seri üretim, boya, yüzey işlemleri, kalite kontrol ve sevkiyata kadar tüm süreçleri entegre üretim yapımız içerisinde yönetiyoruz.</p>
         <p>Standart ürünlerin yanı sıra, müşteriye özel ölçü, geometri, malzeme ve performans gereksinimlerine uygun kompozit çözümler geliştirerek projeye özel üretim kabiliyeti sunuyoruz.</p>
@@ -581,29 +604,29 @@ p { margin: 0; }
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Kalite ve belgeler</p>
-        <h2>Söylediğimizi belgeleriz</h2>
+        <h2>Söylediğimizi Belgeleriz</h2>
         <p>Raylı sistemlerde yolcu güvenliği, kara araçlarında tekrarlanabilir kalite beklenir. Belgelerimizi talep eden her müşteriyle paylaşırız.</p>
       </div>
 
       <!-- Sahip olunmayan belgeleri silin, olanların numarasını girin. -->
       <div class="cert-grid">
         <div class="cert">
-          <div class="cert-code">ISO 9001</div>
+          <div class="cert-code">ISO&nbsp;9001</div>
           <p>Kalite yönetim sistemi</p>
           <span class="todo">Belge durumu</span>
         </div>
         <div class="cert">
-          <div class="cert-code">EN 45545-2</div>
+          <div class="cert-code">EN&nbsp;45545&#8209;2</div>
           <p>Raylı araçlarda yangın güvenliği, malzeme testleri</p>
           <span class="todo">Belge durumu</span>
         </div>
         <div class="cert">
-          <div class="cert-code">IATF 16949</div>
+          <div class="cert-code">IATF&nbsp;16949</div>
           <p>Otomotiv kalite yönetim sistemi</p>
           <span class="todo">Belge durumu</span>
         </div>
         <div class="cert">
-          <div class="cert-code">ISO 14001</div>
+          <div class="cert-code">ISO&nbsp;14001</div>
           <p>Çevre yönetim sistemi</p>
           <span class="todo">Belge durumu</span>
         </div>
@@ -636,7 +659,7 @@ p { margin: 0; }
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Ekibimiz</p>
-        <h2>Parçalarınızı üreten insanlar</h2>
+        <h2>Parçalarınızı Üreten İnsanlar</h2>
         <p>Siparişinizle ilgilenen kişileri tanıyın. Sorularınız doğrudan üretimi bilen birine ulaşır.</p>
       </div>
       <div class="team-grid">
@@ -670,7 +693,7 @@ p { margin: 0; }
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Referanslar</p>
-        <h2>Birlikte çalıştığımız firmalar</h2>
+        <h2>Birlikte Çalıştığımız Firmalar</h2>
         <p><span class="todo">Adı paylaşılabilecek müşteriler ve projeler</span></p>
       </div>
       <div class="logo-grid">
@@ -690,7 +713,7 @@ p { margin: 0; }
       <div class="contact-info">
         <div class="section-head" style="margin-bottom:0">
           <p class="eyebrow">İletişim</p>
-          <h2>Parçanızı konuşalım</h2>
+          <h2>Parçanızı Konuşalım</h2>
           <p>Çizim, fotoğraf veya kısa bir açıklama göndermeniz yeterli. Mesajınıza <span class="todo">yanıt süresi, örn. 1 iş günü</span> içinde dönüş yapıyoruz.</p>
         </div>
         <dl>
@@ -715,7 +738,7 @@ p { margin: 0; }
         <div class="form-row">
           <div class="field">
             <label for="f-email">E-posta</label>
-            <input id="f-email" name="email" type="email" autocomplete="email" required>
+            <input id="f-email" name="email" type="email" autocomplete="email" spellcheck="false" required>
           </div>
           <div class="field">
             <label for="f-phone">Telefon</label>
@@ -745,7 +768,7 @@ p { margin: 0; }
           <input id="f-kvkk" name="kvkk" type="checkbox" required>
           <span><a href="#kvkk">KVKK Aydınlatma Metni</a>'ni okudum, kişisel verilerimin teklif hazırlanması amacıyla işlenmesini kabul ediyorum.</span>
         </label>
-        <div><button class="btn btn-primary" type="submit">Teklif talebini gönder <span class="arrow" aria-hidden="true">→</span></button></div>
+        <div><button class="btn btn-primary" type="submit">Teklif Talebini Gönder <span class="arrow" aria-hidden="true">→</span></button></div>
         <p class="form-status" id="form-status" role="status" hidden></p>
       </form>
     </div>
@@ -757,7 +780,7 @@ p { margin: 0; }
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-about">
-        <a class="brand" href="#top" aria-label="Wise Composite ana sayfa">
+        <a class="brand" href="#icerik" aria-label="Wise Composite ana sayfa" translate="no">
           <svg viewBox="0 0 34 34" aria-hidden="true">
             <path d="M4 24 L14 8 H30 L20 24 Z" fill="currentColor" opacity="0.22"/>
             <path d="M4 27 L14 11 H30 L20 27 Z" fill="currentColor" opacity="0.5"/>
@@ -772,7 +795,7 @@ p { margin: 0; }
         <p><span class="todo">Geçici logo, kurumsal logo eklenecek</span></p>
       </div>
       <div>
-        <h4>Kurumsal</h4>
+        <h2>Kurumsal</h2>
         <ul>
           <li><a href="#hakkimizda">Hakkımızda</a></li>
           <li><a href="#kalite">Kalite ve belgeler</a></li>
@@ -781,18 +804,18 @@ p { margin: 0; }
         </ul>
       </div>
       <div>
-        <h4>Hizmetler</h4>
+        <h2>Hizmetler</h2>
         <ul>
           <li><a href="#sektorler">Kara Araçları</a></li>
           <li><a href="#sektorler">Raylı Sistemler</a></li>
           <li><a href="#sektorler">Özel Projeler</a></li>
           <li><a href="#uretim">BMC &amp; SMC Üretimi</a></li>
-          <li><a href="#iletisim">Teklif isteyin</a></li>
+          <li><a href="#iletisim">Teklif İsteyin</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span id="year">2026</span> Wise Composite. Tüm hakları saklıdır.</span>
+      <span>© <span id="year">2026</span> <span translate="no">Wise Composite</span>. Tüm hakları saklıdır.</span>
       <span><span class="todo">Ticaret unvanı ve MERSİS no</span></span>
     </div>
   </div>
@@ -806,6 +829,14 @@ p { margin: 0; }
     const open = links.classList.toggle('open');
     toggle.setAttribute('aria-expanded', String(open));
     toggle.textContent = open ? 'Kapat' : 'Menü';
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && links.classList.contains('open')) {
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = 'Menü';
+      toggle.focus();
+    }
   });
   links.addEventListener('click', (e) => {
     if (e.target.closest('a')) {
@@ -823,6 +854,7 @@ p { margin: 0; }
   const status = document.getElementById('form-status');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    form.querySelectorAll('[required]').forEach((el) => el.setAttribute('aria-invalid', String(!el.checkValidity())));
     if (!form.checkValidity()) {
       status.textContent = 'Lütfen ad soyad, e-posta ve açıklama alanlarını doldurun ve KVKK onay kutusunu işaretleyin.';
       status.hidden = false;
@@ -832,6 +864,9 @@ p { margin: 0; }
     status.textContent = 'Teşekkürler, talebiniz alındı. (Taslak: form henüz bir e-posta adresine bağlı değil.)';
     status.hidden = false;
     form.reset();
+  });
+  form.addEventListener('input', (e) => {
+    if (e.target.hasAttribute('aria-invalid')) e.target.setAttribute('aria-invalid', String(!e.target.checkValidity()));
   });
 </script>
 </body>
