@@ -1,0 +1,9 @@
+// Cloudflare Workers deployment for the static Wise Composite site.
+// "name" must match the Worker name in the Cloudflare dashboard.
+{
+  "name": "wise-composite",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./"
+  }
+}
