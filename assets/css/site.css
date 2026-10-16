@@ -308,17 +308,10 @@ p { margin: 0; }
 .process-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid var(--line); }
 .process-list li { padding: 28px 28px 32px 0; border-bottom: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
 .process-list li:nth-child(2n) { padding-left: 28px; border-left: 1px solid var(--line); }
-.step-no { font-family: var(--f-mono); font-size: 0.85rem; color: var(--accent); font-weight: 500; }
 .process-list p { color: var(--muted); font-size: 0.98rem; }
 .process-list.three { grid-template-columns: repeat(3, 1fr); }
 .process-list.three li { padding-left: 28px; border-left: 1px solid var(--line); }
 .process-list.three li:first-child { padding-left: 0; border-left: 0; }
-.flow-line {
-  margin-top: 40px; padding: 18px 24px; border-radius: var(--radius);
-  background: var(--accent-soft); color: var(--ink);
-  font-family: var(--f-display); font-stretch: 112%; font-weight: 600;
-  font-size: var(--step-1); line-height: 1.4; text-align: center; text-wrap: balance;
-}
 @media (max-width: 860px) {
   .process-list { grid-template-columns: 1fr; }
   .process-list, .process-list.three { grid-template-columns: 1fr; }
