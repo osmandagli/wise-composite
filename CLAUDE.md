@@ -74,6 +74,7 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
 - Calls to action say **"Bize Ulaşın"** and link to `iletisim.html#iletisim-formu`; no "Teklif İsteyin"
   wording anywhere. No duplicate CTA button in the header (the "İletişim" menu item is enough).
 - No "Kalite ve Belgeler" section or footer link (no certificates yet), no "Ekibimiz" section.
+- Ana Sayfa "Referanslar" section is commented out in `index.html` until the client sends customer logos.
 - Figures on Ana Sayfa and Hakkımızda (illustrative): founded 2024, 4.000 m² indoor, 25 employees, 45 projects.
 - No "Presli Seri Üretim • Boya & Yüzey İşlemleri • Kalite Kontrol • Sevkiyat" strip on any page.
 - Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
