@@ -10,3 +10,6 @@ wrangler.jsonc
 content.md
 .dev.vars
 CLAUDE.md
+*.xlsx
+*.xls
+*.csv
