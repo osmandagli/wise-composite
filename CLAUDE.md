@@ -41,6 +41,8 @@ All visitor-facing text is Turkish. Code comments in this repo are Turkish too; 
 
 Secrets go to Cloudflare → Workers & Pages → wise-composite → Settings → Variables and Secrets
 (type **Secret**). Without them the site works but the form/admin answer "not configured".
+Pitfall: Settings → **Builds** also has a "Variables and secrets" box; those are build-time only
+and invisible to the running Worker. Use the runtime one (near Bindings), not the Builds one.
 
 1. **Admin password**: add secret `ADMIN_PASSWORD` (a long password). Then open `/admin`.
 2. **Turnstile (form CAPTCHA)**: Cloudflare → Turnstile → Add widget; hostname = the
