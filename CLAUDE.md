@@ -44,10 +44,12 @@ Secrets go to Cloudflare → Workers & Pages → wise-composite → Settings →
 
 1. **Admin password**: add secret `ADMIN_PASSWORD` (a long password). Then open `/admin`.
 2. **Turnstile (form CAPTCHA)**: Cloudflare → Turnstile → Add widget; hostname = the
-   `….workers.dev` address (and later the real domain). Put the **Site Key** into `iletisim.html`
-   (`data-sitekey="TURNSTILE_SITE_KEY"` placeholder) and add the **Secret Key** as secret
+   `….workers.dev` address (and later the real domain). Done: Site Key `0x4AAAAAAFYsLYNzzBbYDz-2`
+   is in `iletisim.html` (`data-sitekey`). The **Secret Key** must be added as secret
    `TURNSTILE_SECRET_KEY`.
 3. **Resend (email delivery)**: create the Resend account **with info@wisecomposite.com.tr**.
+   (Oct 2026: the owner has no access to that mailbox yet. Until then the Resend account can use
+   another address the owner controls, with `MAIL_TO` temporarily set to that same address.)
    Without a verified domain Resend can only send from `onboarding@resend.dev` to the account's own
    address, which is exactly where form mail must go (`MAIL_TO` in `wrangler.jsonc`). Create an API
    key and add it as secret `RESEND_API_KEY`.
