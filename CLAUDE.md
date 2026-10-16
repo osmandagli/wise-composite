@@ -80,6 +80,23 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
 - Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
   (KVKK text, trade name/MERSİS, founder quote, photos). Remove the draft bar before the official launch.
 
+## Bulk import from Excel
+
+The first 43 Kara Araçları parts (Mercedes-Benz, MAN, Ford, Isuzu) were loaded on 2026-10-16 from the
+client's `oem_listesi.xlsx` with `araclar/excel_iceaktar.py`. Pictures in such files are floating
+images anchored to the row (some webp/jfif, which openpyxl ignores), so the script reads them from the
+xlsx zip directly. Photos are cut to ≤45 KB JPEG because one D1 SQL statement may not exceed 100 KB.
+Spreadsheets contain prices: never commit them (`*.xlsx` is git- and asset-ignored) and never show prices.
+
+```
+python araclar/excel_iceaktar.py liste.xlsx /tmp/import.sql      # check the printed table first
+npx wrangler d1 execute DB --local --file /tmp/import.sql         # test with `wrangler dev`
+CLOUDFLARE_ACCOUNT_ID=e5d69f07bbbe43dcf72eae7e716aab70 npx wrangler d1 execute wise-composite --remote --file /tmp/import.sql
+```
+Check the live table for duplicates before importing. Wrangler login under WSL: the browser callback
+from `wrangler login` may not reach WSL; logging in from a normal terminal works. The OAuth token
+lacks `account:read`, so always pass `CLOUDFLARE_ACCOUNT_ID` (above).
+
 ## Working locally
 
 ```

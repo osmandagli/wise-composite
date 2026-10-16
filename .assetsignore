@@ -4,6 +4,7 @@
 node_modules/
 photos/
 worker/
+araclar/
 .gitignore
 .assetsignore
 wrangler.jsonc
