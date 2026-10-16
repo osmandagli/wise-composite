@@ -3,7 +3,10 @@
 .wrangler/
 node_modules/
 photos/
+worker/
 .gitignore
 .assetsignore
 wrangler.jsonc
 content.md
+.dev.vars
+CLAUDE.md

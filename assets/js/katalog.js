@@ -1,89 +1,73 @@
-// Ürün kataloğu: filtre düğmeleri + arama + kartlar.
-// Veriler assets/js/urunler.js dosyasındadır; bu dosyayı düzenlemeniz gerekmez.
+// Ürün kataloğu: arama + kartlar.
+// Parçalar yönetim panelinden (admin.html) eklenir ve /api/urunler adresinden okunur.
 
 (function () {
   const root = document.querySelector('[data-katalog]');
   if (!root) return;
 
   const kind = root.dataset.katalog;              // "kara-araclari" | "rayli-sistemler"
-  const filterKey = kind === 'kara-araclari' ? 'marka' : 'tip';
-  const items = (window.URUNLER && window.URUNLER[kind]) || [];
-
   const grid = root.querySelector('.product-grid');
   const count = root.querySelector('.catalog-count');
   const search = root.querySelector('input[type="search"]');
-  const buttons = [...root.querySelectorAll('.seg button')];
+  let items = [];
 
   const params = new URLSearchParams(location.search);
-  let filter = params.get('filtre') || 'Tümü';
   if (search && params.get('ara')) search.value = params.get('ara');
 
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const norm = (s) => String(s ?? '').toLocaleLowerCase('tr').replace(/[\s.\-]/g, '');
-  const todo = (label) => `<span class="todo">${label}</span>`;
-  const val = (v, label) => (v && String(v).trim() ? esc(v) : todo(label));
+  const empty = (title, text) => `<li class="catalog-empty"><strong>${title}</strong>${text}</li>`;
 
   function card(p) {
-    const title = p.ad || '';
     const img = p.gorsel
-      ? `<div class="media product-img"><img src="${esc(p.gorsel)}" alt="${esc(title)}" loading="lazy" width="400" height="300"></div>`
-      : `<div class="photo product-img" role="img" aria-label="Fotoğraf alanı: ${esc(title)}"><p class="photo-cap"><b>FOTOĞRAF EKLENECEK</b></p></div>`;
-
-    const tags = [p[filterKey]].filter(Boolean).map((t) => `<span class="tag" translate="no">${esc(t)}</span>`).join('')
-      + (p.ornek ? todo('Örnek') : '');
-
-    let rows;
-    if (kind === 'kara-araclari') {
-      const oem = (p.oem || []).filter((o) => o && o.trim());
-      rows = `
-        <dt>Model</dt><dd>${val(p.model, 'Model')}</dd>
-        <dt>OEM No</dt><dd translate="no">${oem.length ? oem.map(esc).join('<br>') : todo('OEM no')}</dd>
-        <dt>Ürün Kodu</dt><dd translate="no">${val(p.kod, 'Kod')}</dd>`;
-    } else {
-      rows = `
-        <dt>Proje</dt><dd>${val(p.proje, 'Proje')}</dd>
-        <dt>Parça Kodu</dt><dd translate="no">${val(p.kod, 'Kod')}</dd>`;
-    }
-
-    const ref = [p[filterKey], title, (p.oem || []).filter(Boolean).join(', ') || p.kod].filter(Boolean).join(' · ');
-    const sektor = kind === 'kara-araclari' ? 'Kara Araçları' : 'Raylı Sistemler';
-    const href = `iletisim.html?sektor=${encodeURIComponent(sektor)}&urun=${encodeURIComponent(ref)}#teklif`;
+      ? `<div class="media product-img"><img src="${esc(p.gorsel)}" alt="${esc(p.ad)}" loading="lazy" width="400" height="300"></div>`
+      : `<div class="photo product-img" aria-hidden="true"></div>`;
+    const tags = [p.marka, ...p.uyumlu].filter(Boolean).map((t) => `<span class="tag" translate="no">${esc(t)}</span>`).join('');
+    const rows = [
+      p.oem.length ? `<dt>OEM No</dt><dd translate="no">${p.oem.map(esc).join('<br>')}</dd>` : '',
+      p.kod ? `<dt>Ürün Kodu</dt><dd translate="no">${esc(p.kod)}</dd>` : '',
+    ].join('');
 
     return `<li class="product">
       ${img}
       <div class="product-body">
-        <div class="product-tags">${tags}</div>
-        <h3>${val(title, 'Parça adı')}</h3>
-        <dl>${rows}</dl>
-        <a class="text-link" href="${href}">Teklif İsteyin <span aria-hidden="true">→</span></a>
+        ${tags ? `<div class="product-tags">${tags}</div>` : ''}
+        <h3>${esc(p.ad)}</h3>
+        ${rows ? `<dl>${rows}</dl>` : ''}
       </div>
     </li>`;
   }
 
   function render() {
     const q = norm(search ? search.value : '');
-    const list = items.filter((p) => {
-      if (filter !== 'Tümü' && p[filterKey] !== filter) return false;
-      if (!q) return true;
-      const hay = norm([p.ad, p.model, p.proje, p.kod, p[filterKey], ...(p.oem || [])].join(' '));
-      return hay.includes(q);
-    });
+    const shown = items.filter((p) => !q || norm([p.ad, p.kod, p.marka, ...p.uyumlu, ...p.oem].join(' ')).includes(q));
 
-    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filtre === filter)));
-    count.textContent = `${list.length} parça gösteriliyor`;
-    grid.innerHTML = list.length
-      ? list.map(card).join('')
-      : `<li class="catalog-empty"><strong>Bu aramaya uyan parça bulunamadı.</strong>Farklı bir parça adı veya OEM numarası deneyin ya da parçanızı bize sorun.</li>`;
-    grid.style.gridTemplateColumns = list.length ? '' : '1fr';
+    count.textContent = items.length ? `${shown.length} parça gösteriliyor` : '';
+    grid.innerHTML = shown.length
+      ? shown.map(card).join('')
+      : items.length
+        ? empty('Bu aramaya uyan parça bulunamadı.', 'Farklı bir parça adı veya OEM numarası deneyin ya da parçanızı bize sorun.')
+        : empty('Katalog hazırlanıyor.', 'Aradığınız parça için bize telefon veya WhatsApp üzerinden ulaşabilirsiniz.');
+    grid.style.gridTemplateColumns = shown.length ? '' : '1fr';
 
-    // Seçili filtre ve arama adres çubuğunda kalsın (bağlantı paylaşılabilsin)
+    // Arama adres çubuğunda kalsın (bağlantı paylaşılabilsin)
     const u = new URL(location.href);
-    filter === 'Tümü' ? u.searchParams.delete('filtre') : u.searchParams.set('filtre', filter);
     q ? u.searchParams.set('ara', search.value.trim()) : u.searchParams.delete('ara');
     history.replaceState(null, '', u);
   }
 
-  buttons.forEach((b) => b.addEventListener('click', () => { filter = b.dataset.filtre; render(); }));
   if (search) search.addEventListener('input', render);
-  render();
+  count.textContent = 'Parçalar yükleniyor…';
+  fetch(`/api/urunler?kategori=${kind}`)
+    .then((r) => r.json())
+    .then((out) => {
+      if (!out.ok) throw new Error(out.error);
+      items = out.urunler;
+      render();
+    })
+    .catch(() => {
+      count.textContent = '';
+      grid.innerHTML = empty('Parça listesi şu anda yüklenemedi.', 'Lütfen sayfayı yenileyin ya da bize telefon veya WhatsApp üzerinden ulaşın.');
+      grid.style.gridTemplateColumns = '1fr';
+    });
 })();

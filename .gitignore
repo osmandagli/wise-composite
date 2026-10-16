@@ -1,1 +1,4 @@
 *:Zone.Identifier
+.dev.vars
+.wrangler/
+node_modules/

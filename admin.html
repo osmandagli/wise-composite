@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parça Yönetimi | Wise Composite</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F1216">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="admin">
+
+<header class="admin-bar">
+  <div class="wrap admin-bar-inner">
+    <a class="brand" href="index.html" translate="no"><img src="assets/img/logo-white.svg" alt="Wise Composite" width="110" height="34"></a>
+    <span class="admin-title">Parça Yönetimi</span>
+    <div class="admin-bar-actions" id="oturum-dugmeleri" hidden>
+      <a class="btn btn-ghost btn-sm" href="kara-araclari.html" target="_blank" rel="noopener">Siteyi Aç ↗</a>
+      <button class="btn btn-ghost btn-sm" type="button" id="cikis">Çıkış</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap admin-main">
+
+  <!-- Giriş -->
+  <section class="login-card" id="giris" hidden>
+    <h1>Giriş</h1>
+    <p>Parça eklemek ve düzenlemek için şifrenizi yazın.</p>
+    <form id="giris-formu" class="admin-form">
+      <div class="field">
+        <label for="sifre">Şifre</label>
+        <input id="sifre" name="sifre" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-primary btn-lg" type="submit">Giriş Yap</button>
+      <p class="admin-error" id="giris-hata" role="alert" hidden></p>
+    </form>
+  </section>
+
+  <!-- Parça listesi -->
+  <section id="panel" hidden>
+    <div class="admin-head">
+      <h1>Parçalar</h1>
+      <button class="btn btn-primary btn-lg" type="button" id="yeni">+ Yeni Parça Ekle</button>
+    </div>
+
+    <div class="admin-tabs" role="group" aria-label="Sayfa">
+      <button type="button" data-kategori="kara-araclari" aria-pressed="true">Kara Araçları <span class="count"></span></button>
+      <button type="button" data-kategori="rayli-sistemler" aria-pressed="false">Raylı Sistemler <span class="count"></span></button>
+    </div>
+
+    <div class="search admin-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="search" id="ara" aria-label="Parça ara" placeholder="Parça adı, OEM veya ürün kodu ara…" autocomplete="off">
+    </div>
+
+    <ul class="part-list" id="liste"></ul>
+  </section>
+</main>
+
+<!-- Parça ekleme / düzenleme -->
+<dialog class="part-dialog" id="duzen" aria-labelledby="duzen-baslik">
+  <form id="parca-formu" class="admin-form" novalidate>
+    <div class="dialog-head">
+      <h2 id="duzen-baslik">Yeni Parça</h2>
+      <button type="button" class="icon-btn" data-kapat aria-label="Kapat">×</button>
+    </div>
+
+    <div class="dialog-body">
+      <fieldset class="field">
+        <legend>Bu parça hangi sayfada görünsün?</legend>
+        <div class="choice-row">
+          <label class="choice"><input type="radio" name="kategori" value="kara-araclari" checked><span>Kara Araçları</span></label>
+          <label class="choice"><input type="radio" name="kategori" value="rayli-sistemler"><span>Raylı Sistemler</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="p-ad">Parçanın adı <span class="req">(zorunlu)</span></label>
+        <input id="p-ad" name="ad" type="text" required maxlength="200" placeholder="Örn: Basamak Yuvası Sağ">
+      </div>
+
+      <fieldset class="field only-kara">
+        <legend>Marka</legend>
+        <div class="choice-row">
+          <label class="choice"><input type="radio" name="marka-secim" value="MAN"><span>MAN</span></label>
+          <label class="choice"><input type="radio" name="marka-secim" value="Mercedes-Benz"><span>Mercedes-Benz</span></label>
+          <label class="choice"><input type="radio" name="marka-secim" value="diger"><span>Diğer</span></label>
+        </div>
+        <input id="p-marka-diger" type="text" maxlength="60" placeholder="Marka adını yazın" aria-label="Diğer marka adı" hidden>
+      </fieldset>
+
+      <div class="field only-kara">
+        <label for="p-uyumlu">Uyumlu araç modelleri</label>
+        <input id="p-uyumlu" type="text" placeholder="Örn: 1840, 3240" autocomplete="off">
+        <span class="hint">Birden fazla model varsa aralarına virgül koyun. Her biri sitede ayrı mavi etiket olur.</span>
+        <div class="product-tags" id="uyumlu-onizleme" aria-hidden="true"></div>
+      </div>
+
+      <fieldset class="field">
+        <legend>OEM numaraları</legend>
+        <span class="hint">Ülkeye göre farklı OEM numaraları varsa her birini ayrı satıra yazın.</span>
+        <div class="oem-list" id="oem-listesi"></div>
+        <button type="button" class="btn btn-ghost btn-sm add-oem" id="oem-ekle">+ Başka OEM numarası ekle</button>
+      </fieldset>
+
+      <div class="field only-kara">
+        <label for="p-kod">Ürün kodu</label>
+        <input id="p-kod" name="kod" type="text" maxlength="80" placeholder="Örn: WC-KA-001" spellcheck="false">
+      </div>
+
+      <fieldset class="field">
+        <legend>Fotoğraf</legend>
+        <div class="photo-pick">
+          <div class="photo-preview" id="foto-onizleme"><span>Fotoğraf yok</span></div>
+          <div class="photo-actions">
+            <label class="btn btn-ghost btn-sm" for="p-foto">Fotoğraf Seç</label>
+            <input id="p-foto" type="file" accept="image/*" class="visually-hidden">
+            <button type="button" class="btn btn-ghost btn-sm" id="foto-kaldir" hidden>Fotoğrafı Kaldır</button>
+            <span class="hint">Telefonla çekilen fotoğraf olabilir, otomatik küçültülür. Beyaz zemin üzerinde en iyi görünür.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <p class="admin-error" id="parca-hata" role="alert" hidden></p>
+    </div>
+
+    <div class="dialog-foot">
+      <button type="button" class="btn btn-ghost" data-kapat>Vazgeç</button>
+      <button type="submit" class="btn btn-primary btn-lg" id="kaydet">Kaydet</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="bildirim" role="status" aria-live="polite" hidden></div>
+
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

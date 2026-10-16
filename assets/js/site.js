@@ -28,35 +28,48 @@ if (toggle && links) {
 const year = document.getElementById('year');
 if (year) year.textContent = new Date().getFullYear();
 
-// Teklif formu (yalnızca iletisim.html)
-// TODO: Form henüz bir e-posta adresine veya sunucuya bağlı değil.
-const form = document.getElementById('teklif');
+// İletişim formu (yalnızca iletisim.html)
+// Form /api/iletisim adresine gider; worker/index.js e-postayı info@wisecomposite.com.tr adresine iletir.
+const form = document.getElementById('iletisim-formu');
 if (form) {
   const status = document.getElementById('form-status');
+  const button = form.querySelector('button[type="submit"]');
+  const say = (msg) => { status.textContent = msg; status.hidden = false; };
+  const errors = {
+    captcha: 'Doğrulama tamamlanamadı. Lütfen "insan olduğunuzu doğrulayın" kutusunu işaretleyip tekrar deneyin.',
+    file: 'Dosya 10 MB\'tan büyük olamaz.',
+    invalid: 'Lütfen ad soyad, e-posta ve açıklama alanlarını doldurun ve KVKK onay kutusunu işaretleyin.',
+  };
+  const fallback = 'Mesajınız gönderilemedi. Lütfen info@wisecomposite.com.tr adresine e-posta gönderin veya 0540 308 10 10 numarasından bize ulaşın.';
 
-  // Katalogdaki "Teklif İsteyin" bağlantısından gelindiyse parçayı mesaja yaz
-  const params = new URLSearchParams(location.search);
-  const urun = params.get('urun');
-  const sektor = params.get('sektor');
-  if (urun) document.getElementById('f-message').value = `Teklif istediğim parça: ${urun}\n`;
-  if (sektor) {
-    const select = document.getElementById('f-sector');
-    const match = [...select.options].find((o) => o.value === sektor);
-    if (match) select.value = sektor;
-  }
-
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     form.querySelectorAll('[required]').forEach((el) => el.setAttribute('aria-invalid', String(!el.checkValidity())));
     if (!form.checkValidity()) {
-      status.textContent = 'Lütfen ad soyad, e-posta ve açıklama alanlarını doldurun ve KVKK onay kutusunu işaretleyin.';
-      status.hidden = false;
+      say(errors.invalid);
       form.reportValidity();
       return;
     }
-    status.textContent = 'Teşekkürler, talebiniz alındı. (Taslak: form henüz bir e-posta adresine bağlı değil.)';
-    status.hidden = false;
-    form.reset();
+    const file = document.getElementById('f-file').files[0];
+    if (file && file.size > 10 * 1024 * 1024) { say(errors.file); return; }
+
+    button.disabled = true;
+    say('Gönderiliyor…');
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      const out = await res.json().catch(() => ({}));
+      if (res.ok && out.ok) {
+        say('Teşekkürler, mesajınız bize ulaştı. En kısa sürede dönüş yapacağız.');
+        form.reset();
+      } else {
+        say(errors[out.error] || fallback);
+      }
+    } catch {
+      say(fallback);
+    } finally {
+      button.disabled = false;
+      if (window.turnstile) window.turnstile.reset();
+    }
   });
   form.addEventListener('input', (e) => {
     if (e.target.hasAttribute('aria-invalid')) e.target.setAttribute('aria-invalid', String(!e.target.checkValidity()));

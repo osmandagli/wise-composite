@@ -1,9 +1,23 @@
-// Cloudflare Workers deployment for the static Wise Composite site.
+// Cloudflare Workers deployment for the Wise Composite site.
 // "name" must match the Worker name in the Cloudflare dashboard.
+// Static files are served directly; only /api/* runs worker/index.js. See CLAUDE.md.
 {
   "name": "wise-composite",
+  "main": "worker/index.js",
   "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  // Parts catalog + admin panel. No database_id: wrangler creates the database on first deploy.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "wise-composite" }
+  ],
+  "vars": {
+    "MAIL_TO": "info@wisecomposite.com.tr",
+    // No own domain yet: Resend's shared sender, which only delivers to the Resend account's own email (MAIL_TO).
+    // After a domain is verified in Resend, change to e.g. "Wise Composite Web <web@wisecomposite.com.tr>".
+    "MAIL_FROM": "Wise Composite Web <onboarding@resend.dev>"
   }
 }

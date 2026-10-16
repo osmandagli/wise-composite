@@ -1,0 +1,84 @@
+# Wise Composite web sitesi
+
+Corporate site for Wise Composite (BMC/SMC composite parts manufacturer, Sincan/Ankara).
+All visitor-facing text is Turkish. Code comments in this repo are Turkish too; keep that style.
+
+## Architecture
+
+- Plain static HTML/CSS/JS, no build step: `index.html`, `hakkimizda.html`, `kara-araclari.html`,
+  `rayli-sistemler.html`, `ozel-projeler.html`, `iletisim.html`, `admin.html`. Shared styles in
+  `assets/css/site.css`, shared JS in `assets/js/site.js`. Header/footer/WhatsApp button are
+  duplicated in every page; change all pages together.
+- Hosted on **Cloudflare Workers** (static assets + a small Worker), deployed by Cloudflare's Git
+  integration on every push to `main` (`npx wrangler deploy`). Config: `wrangler.jsonc`.
+- No own domain yet: the site runs on `wise-composite.<account>.workers.dev`. `og:url` meta tags
+  still point to the old `wisecomposite.duckdns.org` address; update them once a domain exists.
+- `.assetsignore` keeps non-public files (worker code, config, `content.md`, `photos/`, this file)
+  off the website. Add new private files there.
+- The Worker only runs for `/api/*` (`run_worker_first`); everything else is served as static files.
+  - `worker/index.js`: router
+  - `worker/iletisim.js`: contact form, `POST /api/iletisim` (Turnstile check, then email via Resend)
+  - `worker/urunler.js`: public catalog `GET /api/urunler?kategori=…` and photos `GET /api/gorsel/:id`
+  - `worker/admin.js`: admin API `/api/admin/*` (password login, add/edit/delete parts)
+  - `worker/ortak.js`: helpers and D1 schema (tables are created on first request, no migrations)
+- Parts live in **Cloudflare D1** (database `wise-composite`, binding `DB`), photos as BLOBs in the
+  same table (the admin page shrinks them to max 1200 px JPEG before upload). There is no
+  `database_id` in `wrangler.jsonc` on purpose: wrangler ≥ 4.45 creates and links the database on
+  the first deploy. Don't add a static parts list back; the catalog pages read from `/api/urunler`.
+
+## Admin panel (for the owner's mother, keep it simple)
+
+- URL: `/admin` (not linked from the site, `noindex`). One password = `ADMIN_PASSWORD` secret.
+  Session lasts 30 days; changing the password logs everyone out. 10 wrong passwords per IP in
+  15 minutes lock login for 15 minutes.
+- Part fields: page (Kara Araçları / Raylı Sistemler), name (required), and for Kara Araçları also
+  brand (MAN / Mercedes-Benz / other), compatible models (each becomes a blue tag, e.g. 1840, 3240),
+  several OEM numbers (they differ by country), product code. Raylı Sistemler: name + OEM only.
+  Photo optional. No "model" field and no "Teklif İsteyin" link on part cards (client decision).
+- UI rules: plain Turkish, big buttons, no jargon, confirm before delete, show a success message.
+
+## One-time setup still needed (owner does this in the Cloudflare / Resend dashboards)
+
+Secrets go to Cloudflare → Workers & Pages → wise-composite → Settings → Variables and Secrets
+(type **Secret**). Without them the site works but the form/admin answer "not configured".
+
+1. **Admin password**: add secret `ADMIN_PASSWORD` (a long password). Then open `/admin`.
+2. **Turnstile (form CAPTCHA)**: Cloudflare → Turnstile → Add widget; hostname = the
+   `….workers.dev` address (and later the real domain). Put the **Site Key** into `iletisim.html`
+   (`data-sitekey="TURNSTILE_SITE_KEY"` placeholder) and add the **Secret Key** as secret
+   `TURNSTILE_SECRET_KEY`.
+3. **Resend (email delivery)**: create the Resend account **with info@wisecomposite.com.tr**.
+   Without a verified domain Resend can only send from `onboarding@resend.dev` to the account's own
+   address, which is exactly where form mail must go (`MAIL_TO` in `wrangler.jsonc`). Create an API
+   key and add it as secret `RESEND_API_KEY`.
+4. **Database**: nothing to do; created automatically on deploy. To inspect it:
+   Cloudflare → Storage & Databases → D1 → wise-composite.
+
+### When a domain is bought later
+
+- Workers → wise-composite → Domains → add `wisecomposite.com.tr` (domain must be on Cloudflare).
+- Add that hostname to the Turnstile widget.
+- Verify the domain in Resend (DNS records), then change `MAIL_FROM` in `wrangler.jsonc` to e.g.
+  `Wise Composite Web <web@wisecomposite.com.tr>`.
+- Update `og:url` / `og:image` URLs in every page's `<head>`.
+
+## Content decisions (client instructions, Oct 2026)
+
+- Phone: **0540 308 10 10** (`tel:+905403081010`). WhatsApp button on every page → `wa.me/905403081010`.
+- Email: info@wisecomposite.com.tr. Hours: Hafta içi 08.00–18.00, Cumartesi–Pazar kapalı.
+- No breadcrumbs. No "01 —/02 —/03 —" numbering on page eyebrows.
+- Calls to action say **"Bize Ulaşın"** and link to `iletisim.html#iletisim-formu`; no "Teklif İsteyin"
+  wording anywhere. No duplicate CTA button in the header (the "İletişim" menu item is enough).
+- No "Kalite ve Belgeler" section or footer link (no certificates yet), no "Ekibimiz" section.
+- Hakkımızda figures (illustrative): founded 2024, 4.000 m² indoor, 25 employees, 45 projects.
+- Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
+  (KVKK text, trade name/MERSİS, founder quote, photos). Remove the draft bar before the official launch.
+
+## Working locally
+
+```
+printf 'ADMIN_PASSWORD=test\nTURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA\nRESEND_API_KEY=re_test\n' > .dev.vars
+npx wrangler dev        # http://localhost:8787, local D1 in .wrangler/ (both git-ignored)
+```
+The Turnstile secret above is Cloudflare's always-pass test key. Email sending fails locally
+without a real Resend key; everything else works.
