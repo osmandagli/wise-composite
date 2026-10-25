@@ -86,7 +86,7 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
     collage; used on Raylı Sistemler hero and the Ana Sayfa sector card).
   - Factory photo with the logo (`assets/img/fabrika.jpg`, Ana Sayfa hero + Hakkımızda hero) will be replaced later.
 - Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
-  (KVKK text, trade name/MERSİS, founder quote, photos). Remove the draft bar before the official launch.
+  (KVKK text, trade name/MERSİS, photos). Remove the draft bar before the official launch.
 
 ## Bulk import from Excel
 
