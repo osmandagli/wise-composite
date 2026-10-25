@@ -77,6 +77,14 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
 - Ana Sayfa "Referanslar" section is commented out in `index.html` until the client sends customer logos.
 - Figures on Ana Sayfa and Hakkımızda (illustrative): founded 2024, 4.000 m² indoor, 25 employees, 45 projects.
 - No "Presli Seri Üretim • Boya & Yüzey İşlemleri • Kalite Kontrol • Sevkiyat" strip on any page.
+- Slogan **"Hayalinizden ürüne, fikirden gerçeğe."** is shown as a `.quote` on Hakkımızda and Özel Projeler.
+  No founder name/photo/title anywhere (client decision, 25.10.2026).
+- Photos promised by the client, not received yet (Oct 2026):
+  - Presses → Hakkımızda photo slot next to the intro text; drop in `assets/img/presler.jpg` and use the
+    `<img>` line left in the HTML comment there.
+  - A cleaner single train photo → replaces `assets/img/rayli-sistemler.jpg` (current one is a 3-vehicle
+    collage; used on Raylı Sistemler hero and the Ana Sayfa sector card).
+  - Factory photo with the logo (`assets/img/fabrika.jpg`, Ana Sayfa hero + Hakkımızda hero) will be replaced later.
 - Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
   (KVKK text, trade name/MERSİS, founder quote, photos). Remove the draft bar before the official launch.
 
