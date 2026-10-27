@@ -33,7 +33,9 @@ All visitor-facing text is Turkish. Code comments in this repo are Turkish too; 
   15 minutes lock login for 15 minutes.
 - Part fields: page (Kara Araçları / Raylı Sistemler), name (required), and for Kara Araçları also
   brand (MAN / Mercedes-Benz / other), compatible models (each becomes a blue tag, e.g. 1840, 3240),
-  several OEM numbers (they differ by country), product code. Raylı Sistemler: name + OEM only.
+  several OEM numbers (they differ by country), product code. OEM numbers are written with the last
+  4 digits joined (`944 666 0201`, client decision 27.10.2026); `worker/admin.js` rewrites
+  `xxx xxx xx xx` to that form on save. Raylı Sistemler: name + OEM only.
   Photo optional. No "model" field and no "Teklif İsteyin" link on part cards (client decision).
 - UI rules: plain Turkish, big buttons, no jargon, confirm before delete, show a success message.
 
@@ -50,8 +52,8 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
    is in `iletisim.html` (`data-sitekey`). The **Secret Key** must be added as secret
    `TURNSTILE_SECRET_KEY`.
 3. **Resend (email delivery)**: create the Resend account **with info@wisecomposite.com.tr**.
-   (Oct 2026: the owner has no access to that mailbox yet. Until then the Resend account can use
-   another address the owner controls, with `MAIL_TO` temporarily set to that same address.)
+   (27.10.2026: decided to keep `MAIL_TO` = info@wisecomposite.com.tr; the client sets up Resend
+   with that mailbox themselves. No temporary address.)
    Without a verified domain Resend can only send from `onboarding@resend.dev` to the account's own
    address, which is exactly where form mail must go (`MAIL_TO` in `wrangler.jsonc`). Create an API
    key and add it as secret `RESEND_API_KEY`.
@@ -80,13 +82,14 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
 - Slogan **"Hayalinizden ürüne, fikirden gerçeğe."** is shown as a `.quote` on Hakkımızda and Özel Projeler.
   No founder name/photo/title anywhere (client decision, 25.10.2026).
 - Photos promised by the client, not received yet (Oct 2026):
-  - Presses → Hakkımızda photo slot next to the intro text; drop in `assets/img/presler.jpg` and use the
+  - Presses (a hot hydraulic press with a steel mold mounted, 27.10.2026) → Hakkımızda photo slot next to the intro text; drop in `assets/img/presler.jpg` and use the
     `<img>` line left in the HTML comment there.
   - A cleaner single train photo → replaces `assets/img/rayli-sistemler.jpg` (current one is a 3-vehicle
     collage; used on Raylı Sistemler hero and the Ana Sayfa sector card).
   - Factory photo with the logo (`assets/img/fabrika.jpg`, Ana Sayfa hero + Hakkımızda hero) will be replaced later.
+- No trade name / MERSİS line in the footer (client decision, 27.10.2026).
 - Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
-  (KVKK text, trade name/MERSİS, photos). Remove the draft bar before the official launch.
+  (KVKK text, photos). Remove the draft bar before the official launch.
 
 ## Bulk import from Excel
 

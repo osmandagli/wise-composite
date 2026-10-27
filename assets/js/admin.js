@@ -135,7 +135,7 @@
   function oemSatiri(deger = '') {
     const div = document.createElement('div');
     div.className = 'oem-item';
-    div.innerHTML = `<input type="text" maxlength="80" spellcheck="false" aria-label="OEM numarası" placeholder="Örn: A 940 666 01 01">
+    div.innerHTML = `<input type="text" maxlength="80" spellcheck="false" aria-label="OEM numarası" placeholder="Örn: A 940 666 0101">
       <button type="button" class="btn btn-ghost btn-sm" aria-label="Bu OEM numarasını sil">Sil</button>`;
     div.querySelector('input').value = deger;
     div.querySelector('button').addEventListener('click', () => {

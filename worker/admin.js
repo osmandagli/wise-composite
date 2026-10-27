@@ -40,6 +40,10 @@ export async function handleAdmin(request, env, route) {
 
 // ---------- Parça kaydetme ----------
 
+// Kara Araçları OEM numaralarında son 4 hane bitişik yazılır (müşteri isteği):
+// "944 666 02 01" → "944 666 0201". Bu kalıba uymayan numaralara dokunulmaz.
+const oemBicim = (s) => s.replace(/^((?:[A-Za-z] )?\d{3} \d{3}) (\d{2}) (\d{2})$/, '$1 $2$3');
+
 async function savePart(request, env, id) {
   const data = await request.formData();
   const text = (k, max = 200) => String(data.get(k) ?? '').trim().slice(0, max);
@@ -54,7 +58,7 @@ async function savePart(request, env, id) {
     ad,
     marka: kara ? text('marka', 60) : '',
     uyumlu: JSON.stringify(kara ? list('uyumlu') : []),
-    oem: JSON.stringify(list('oem')),
+    oem: JSON.stringify(list('oem').map(oemBicim)),
     kod: kara ? text('kod', 80) : '',
   };
 
