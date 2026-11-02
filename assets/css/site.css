@@ -431,3 +431,11 @@ p { margin: 0; }
 .wa-float:hover { background: #1EBE5A; transform: translateY(-2px); }
 .wa-float svg { width: 30px; height: 30px; }
 .site-footer { padding-bottom: 96px; } /* düğme alt bilgideki yazıların üstüne binmesin */
+
+/* KVKK ve benzeri yasal metinler */
+.legal { display: grid; gap: 16px; max-width: 760px; }
+.legal h2 { font-size: var(--step-1); margin-top: 24px; }
+.legal h2:first-child { margin-top: 0; }
+.legal ul { display: grid; gap: 8px; padding-left: 1.25em; list-style: disc; }
+.legal a { text-decoration: underline; }
+.legal-date { margin-top: 24px; color: var(--muted); font-size: 0.9rem; }

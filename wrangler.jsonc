@@ -11,6 +11,8 @@
     "run_worker_first": ["/api/*"]
   },
   // Parts catalog + admin panel. No database_id: wrangler creates the database on first deploy.
+  // Worker logs are kept in Cloudflare → wise-composite → Observability (e.g. contact form mail errors).
+  "observability": { "enabled": true },
   "d1_databases": [
     { "binding": "DB", "database_name": "wise-composite" }
   ],

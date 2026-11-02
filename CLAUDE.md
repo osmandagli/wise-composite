@@ -6,7 +6,7 @@ All visitor-facing text is Turkish. Code comments in this repo are Turkish too; 
 ## Architecture
 
 - Plain static HTML/CSS/JS, no build step: `index.html`, `hakkimizda.html`, `kara-araclari.html`,
-  `rayli-sistemler.html`, `ozel-projeler.html`, `iletisim.html`, `admin.html`. Shared styles in
+  `rayli-sistemler.html`, `ozel-projeler.html`, `iletisim.html`, `kvkk.html`, `admin.html`. Shared styles in
   `assets/css/site.css`, shared JS in `assets/js/site.js`. Header/footer/WhatsApp button are
   duplicated in every page; change all pages together.
 - Hosted on **Cloudflare Workers** (static assets + a small Worker), deployed by Cloudflare's Git
@@ -88,8 +88,12 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
     collage; used on Raylı Sistemler hero and the Ana Sayfa sector card).
   - Factory photo with the logo (`assets/img/fabrika.jpg`, Ana Sayfa hero + Hakkımızda hero) will be replaced later.
 - No trade name / MERSİS line in the footer (client decision, 27.10.2026).
+- `kvkk.html` (KVKK Aydınlatma Metni, 02.11.2026) is a standard text written by us, not by a lawyer. It names the
+  service providers (Cloudflare, Resend, Google incl. Google Fonts) and says form mail is not stored on the site;
+  update it if that changes (e.g. analytics, a new email provider). The form checkbox only confirms the text was
+  read ("okudum"); answering a request needs no explicit consent, so don't add a consent wording back.
 - Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
-  (KVKK text, photos). Remove the draft bar before the official launch.
+  (trade name on `kvkk.html`, photos). Remove the draft bar before the official launch.
 
 ## Bulk import from Excel
 
