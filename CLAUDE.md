@@ -11,8 +11,12 @@ All visitor-facing text is Turkish. Code comments in this repo are Turkish too; 
   duplicated in every page; change all pages together.
 - Hosted on **Cloudflare Workers** (static assets + a small Worker), deployed by Cloudflare's Git
   integration on every push to `main` (`npx wrangler deploy`). Config: `wrangler.jsonc`.
-- No own domain yet: the site runs on `wise-composite.<account>.workers.dev`. `og:url` meta tags
-  still point to the old `wisecomposite.duckdns.org` address; update them once a domain exists.
+- Live at **https://wisecomposite.com.tr** (since 03.11.2026; DNS on Cloudflare, Worker custom domains for
+  the apex and `www`; mail stays on Google Workspace, keep its MX/SPF/DKIM records). Clean URLs: Cloudflare
+  serves `/hakkimizda.html` as `/hakkimizda`, so `canonical`, `og:url` and `sitemap.xml` use the short form.
+  Add new pages to `sitemap.xml`.
+- Launched 11.11.2026: draft bar and yellow markers removed. `.todo` / `.draft-bar` styles stay in
+  `site.css` but shouldn't appear on live pages any more.
 - `.assetsignore` keeps non-public files (worker code, config, `content.md`, `photos/`, this file)
   off the website. Add new private files there.
 - The Worker only runs for `/api/*` (`run_worker_first`); everything else is served as static files.
@@ -60,13 +64,15 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
 4. **Database**: nothing to do; created automatically on deploy. To inspect it:
    Cloudflare → Storage & Databases → D1 → wise-composite.
 
-### When a domain is bought later
+### Domain follow-ups (owner, dashboards)
 
-- Workers → wise-composite → Domains → add `wisecomposite.com.tr` (domain must be on Cloudflare).
-- Add that hostname to the Turnstile widget.
-- Verify the domain in Resend (DNS records), then change `MAIL_FROM` in `wrangler.jsonc` to e.g.
+- Done: domain on Cloudflare, custom domains, `og:url`/`canonical`/`robots.txt`/`sitemap.xml`.
+- Add `wisecomposite.com.tr` and `www.wisecomposite.com.tr` to the Turnstile widget, or the form fails there.
+- SSL/TLS → Edge Certificates → Always Use HTTPS (was still off on 11.11.2026).
+- Optional: verify the domain in Resend (DNS records), then change `MAIL_FROM` in `wrangler.jsonc` to e.g.
   `Wise Composite Web <web@wisecomposite.com.tr>`.
-- Update `og:url` / `og:image` URLs in every page's `<head>`.
+- Google Search Console (Domain property, verified via Cloudflare) + submit `sitemap.xml`; Bing Webmaster
+  Tools can import from it.
 
 ## Content decisions (client instructions, Oct 2026)
 
@@ -82,8 +88,8 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
 - Slogan **"Hayalinizden ürüne, fikirden gerçeğe."** is shown as a `.quote` on Hakkımızda and Özel Projeler.
   No founder name/photo/title anywhere (client decision, 25.10.2026).
 - Photos promised by the client, not received yet (Oct 2026):
-  - Presses (a hot hydraulic press with a steel mold mounted, 27.10.2026) → Hakkımızda photo slot next to the intro text; drop in `assets/img/presler.jpg` and use the
-    `<img>` line left in the HTML comment there.
+  - Presses (a hot hydraulic press with a steel mold mounted, 27.10.2026) → Hakkımızda intro section. The empty
+    placeholder was removed at launch; the HTML comment there says how to add `assets/img/presler.jpg`.
   - A cleaner single train photo → replaces `assets/img/rayli-sistemler.jpg` (current one is a 3-vehicle
     collage; used on Raylı Sistemler hero and the Ana Sayfa sector card).
   - Factory photo with the logo (`assets/img/fabrika.jpg`, Ana Sayfa hero + Hakkımızda hero) will be replaced later.
@@ -92,8 +98,9 @@ and invisible to the running Worker. Use the runtime one (near Bindings), not th
   service providers (Cloudflare, Resend, Google incl. Google Fonts) and says form mail is not stored on the site;
   update it if that changes (e.g. analytics, a new email provider). The form checkbox only confirms the text was
   read ("okudum"); answering a request needs no explicit consent, so don't add a consent wording back.
-- Yellow `.todo` markers and the draft bar at the top of each page mark content still to be supplied
-  (trade name on `kvkk.html`, photos). Remove the draft bar before the official launch.
+- Company (for KVKK / legal texts): WISE COMPOSITE MÜHENDİSLİK TİC. VE SAN. LTD. ŞTİ., Sincan V.D. 8111549119.
+  The site keeps 0540 308 10 10 as its phone; the official record also lists 0533 265 97 92. Don't put the
+  company officer's name on the site (no names policy above).
 
 ## Bulk import from Excel
 

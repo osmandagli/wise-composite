@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /api/
+
+Sitemap: https://wisecomposite.com.tr/sitemap.xml
